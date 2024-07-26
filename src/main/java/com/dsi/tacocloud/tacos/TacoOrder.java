@@ -2,12 +2,23 @@ package com.dsi.tacocloud.tacos;
 
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.CreditCardNumber;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class TacoOrder {
+@Setter
+@Getter
+@Data
+public class TacoOrder implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private long id;
+    private Date placedAt;
     @NotBlank(message = "Must be not blank")
     private String deliveryName;
     @NotBlank(message = "Must be not blank")
@@ -43,59 +54,4 @@ public class TacoOrder {
         tacos.add(taco);
     }
 
-    public String getCcCVV() {
-        return ccCVV;
-    }
-
-    public void setCcCVV(String ccCVV) {
-        this.ccCVV = ccCVV;
-    }
-
-    public String getCcNumber() {
-        return ccNumber;
-    }
-
-    public void setCcNumber(String ccNumber) {
-        this.ccNumber = ccNumber;
-    }
-
-    public String getDeliveryAddress() {
-        return deliveryAddress;
-    }
-
-    public void setDeliveryAddress(String deliveryAddress) {
-        this.deliveryAddress = deliveryAddress;
-    }
-
-    public String getDeliveryEmail() {
-        return deliveryEmail;
-    }
-
-    public void setDeliveryEmail(String deliveryEmail) {
-        this.deliveryEmail = deliveryEmail;
-    }
-
-    public String getDeliveryName() {
-        return deliveryName;
-    }
-
-    public void setDeliveryName(String deliveryName) {
-        this.deliveryName = deliveryName;
-    }
-
-    public String getDeliveryPhone() {
-        return deliveryPhone;
-    }
-
-    public void setDeliveryPhone(String deliveryPhone) {
-        this.deliveryPhone = deliveryPhone;
-    }
-
-    public List<Taco> getTacos() {
-        return tacos;
-    }
-
-    public void setTacos(List<Taco> tacos) {
-        this.tacos = tacos;
-    }
 }
