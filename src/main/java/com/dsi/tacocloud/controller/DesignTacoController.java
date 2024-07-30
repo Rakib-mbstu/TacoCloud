@@ -7,6 +7,7 @@ import com.dsi.tacocloud.tacos.Ingredient;
 import com.dsi.tacocloud.tacos.Taco;
 import com.dsi.tacocloud.tacos.TacoOrder;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Controller
 @RequestMapping("/design")//handles path after /design
 @SessionAttributes("tacoOrder")//The obj of TacoOrder should be added a lil late and maintained throughout a session

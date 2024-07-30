@@ -25,7 +25,7 @@ public class JdbcIngredientRepository implements IngredientRepository {
     }
 
     @Override
-    public Optional<Ingredient> findById(Long id) {
+    public Optional<Ingredient> findById(String id) {
         List<Ingredient> results = jdbcTemplate.query("select id,name,type from Ingredient where id=?", this::mapRowToIngredient, id);
         return results.isEmpty() ? Optional.empty() : Optional.of(results.get(0));
     }
