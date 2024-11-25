@@ -3,6 +3,7 @@ package com.dsi.tacocloud.controller;
 
 
 import com.dsi.tacocloud.repository.IngredientRepository;
+import com.dsi.tacocloud.repository.TacoRepository;
 import com.dsi.tacocloud.tacos.Ingredient;
 import com.dsi.tacocloud.tacos.Taco;
 import com.dsi.tacocloud.tacos.TacoOrder;
@@ -15,6 +16,8 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,27 +28,28 @@ import java.util.stream.Collectors;
 @SessionAttributes("tacoOrder")//The obj of TacoOrder should be added a lil late and maintained throughout a session
 public class DesignTacoController {
     private final IngredientRepository ingredientRepository;
+    private  TacoRepository tacoRepository;
 
     @Autowired
-    public DesignTacoController(IngredientRepository ingredientRepository) {
+    public DesignTacoController(IngredientRepository ingredientRepository,TacoRepository tacoRepository) {
         this.ingredientRepository = ingredientRepository;
+        this.tacoRepository = tacoRepository;
+    }
+    @GetMapping
+    public String showDesignForm(Model model) {
+        List<Ingredient> ingredientList = new ArrayList<>();
+        ingredientRepository.findAll().forEach(ingredient -> ingredientList.add(ingredient));
+        Ingredient.Type[] types = Ingredient.Type.values();
+        for (Ingredient.Type type : types) {
+            model.addAttribute(type.toString().toLowerCase(),
+                    filterByType(ingredientList, type));
+        }
+        return "design";
     }
 
     @ModelAttribute
     public void addIngredientsToModel(Model model) {
         Iterable<Ingredient> ingredientList = ingredientRepository.findAll();
-//        Arrays.asList(
-//                new Ingredient("FLTO","Flower Tortilla", Ingredient.Type.WRAP),
-//                new Ingredient("COTO","Corn Tortilla", Ingredient.Type.WRAP),
-//                new Ingredient("GRBF","Ground Beef", Ingredient.Type.PROTEIN),
-//                new Ingredient("CARN","Carnites", Ingredient.Type.PROTEIN),
-//                new Ingredient("TMTO","Diced Tomatoes", Ingredient.Type.VEGETABLE),
-//                new Ingredient("NMTO","Diced Corolla", Ingredient.Type.VEGETABLE),
-//                new Ingredient("LTCE", "Goat Milk", Ingredient.Type.CHEESE),
-//                new Ingredient("LDCE", "Cow Milk", Ingredient.Type.CHEESE),
-//                new Ingredient("FrTt","Sour Cream", Ingredient.Type.SAUCE),
-//                new Ingredient("FrTL","Heavy Sour Cream", Ingredient.Type.SAUCE)
-//        );
         Ingredient.Type[] types = Ingredient.Type.values();
         for(Ingredient.Type type : types) {
             model.addAttribute(type.toString().toLowerCase(),filterByType((List<Ingredient>) ingredientList,type));

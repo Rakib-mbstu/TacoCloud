@@ -3,6 +3,7 @@ package com.dsi.tacocloud.repository;
 import com.dsi.tacocloud.tacos.Ingredient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
@@ -38,13 +39,25 @@ public class JdbcIngredientRepository implements IngredientRepository {
         );
     }
 
+    public Ingredient findOne(String id){
+        return jdbcTemplate.queryForObject("select id, name, type from Ingredient where id=?", new RowMapper<Ingredient>() {
+            @Override
+            public Ingredient mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return new Ingredient(
+                        rs.getString("id"),
+                        rs.getString("name"),
+                        Ingredient.Type.valueOf(rs.getString("type"))
+                );
+            }
+        }, id);
+    }
+
     @Override
     public Ingredient save(Ingredient ingredient) {
         jdbcTemplate.update(
                 "insert into Ingredient (id, name, type) values (?,?,?)",
                 ingredient.getId(),
                 ingredient.getName(),
-                ingredient.getType(),
                 ingredient.getType().toString()
         );
         return ingredient;
